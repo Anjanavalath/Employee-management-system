@@ -1,46 +1,357 @@
-{% extends "base.html" %} {% block content %}
-<!-- <table border="1">
-        <tr>
-            <th>Name</th>
-            <th>Salary</th>
-        </tr>
+{% extends "base.html" %}
 
-        {% for emp in employees %}
-        <tr>
-            <td>{{ emp.name|upper }}</td>
-            <td>{{ emp.salary }}</td>
-        </tr>
-        {% endfor %}
-    </table> -->
+{% block content %}
 
-<a href="/employee/add" class="btn btn-primary mx-3 my-3">Add Employee</a>
+<div class="container mt-4">
 
-<table class="table table-hover mx-auto table-bordered">
-  <thead class="table-dark">
-    <tr>
-      <th scope="col">Name</th>
-      <th scope="col">Department</th>
-      <th scope="col">Salary</th>
-      <th scope="col">Email</th>
-      <th scope="col">Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for emp in employees %}
-    <tr>
-      <td>{{emp.name}}</td>
-      <td>{{emp.department}}</td>
-      <td>{{emp.salary}}</td>
-      <td>{{emp.email}}</td>
+    <div class="d-flex justify-content-between mb-3">
+        <h2>Employee Management</h2>
 
-      <td>
-        <a href="/employee/employeeDetail/{{emp.id}}" class="btn btn-success"> Detail </a>
-        <a href="/employee/employeeUpdate/{{emp.id}}" class="btn btn-warning"> Edit </a>
-        <a href="/employee/employeeDelete/{{emp.id}}" class="btn btn-danger"> Delete </a>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+        <a href="/employee/add" class="btn btn-primary">
+            Add Employee
+        </a>
+    </div>
+
+    
+
+    <form method="GET" action="{{ url_for('employee.employee_list') }}">
+
+        <div class="row">
+
+            <div class="col-md-3 mb-3">
+                <input
+                    type="text"
+                    class="form-control"
+                    name="search"
+                    placeholder="Search Name / Email / Department"
+                    value="{{ search }}">
+            </div>
+
+            <div class="col-md-2 mb-3">
+
+                <select
+                    class="form-select"
+                    name="department">
+
+                    <option value="">All Departments</option>
+
+                    <option value="HR"
+                        {% if department=="HR" %}selected{% endif %}>
+                        HR
+                    </option>
+
+                    <option value="IT"
+                        {% if department=="IT" %}selected{% endif %}>
+                        IT
+                    </option>
+
+                    <option value="Finance"
+                        {% if department=="Finance" %}selected{% endif %}>
+                        Finance
+                    </option>
+
+                    <option value="Marketing"
+                        {% if department=="Marketing" %}selected{% endif %}>
+                        Marketing
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="col-md-2 mb-3">
+
+                <input
+                    type="number"
+                    class="form-control"
+                    name="min_salary"
+                    placeholder="Min Salary"
+                    value="{{ min_salary }}">
+
+            </div>
+
+            <div class="col-md-2 mb-3">
+
+                <input
+                    type="number"
+                    class="form-control"
+                    name="max_salary"
+                    placeholder="Max Salary"
+                    value="{{ max_salary }}">
+
+            </div>
+
+            <div class="col-md-2 mb-3">
+
+                <select
+                    class="form-select"
+                    name="sort_by">
+
+                    <option value="id"
+                        {% if sort_by=="id" %}selected{% endif %}>
+                        ID
+                    </option>
+
+                    <option value="name"
+                        {% if sort_by=="name" %}selected{% endif %}>
+                        Name
+                    </option>
+
+                    <option value="department"
+                        {% if sort_by=="department" %}selected{% endif %}>
+                        Department
+                    </option>
+
+                    <option value="salary"
+                        {% if sort_by=="salary" %}selected{% endif %}>
+                        Salary
+                    </option>
+
+                    <option value="email"
+                        {% if sort_by=="email" %}selected{% endif %}>
+                        Email
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="col-md-1 mb-3">
+
+                <select
+                    class="form-select"
+                    name="order">
+
+                    <option value="asc"
+                        {% if order=="asc" %}selected{% endif %}>
+                        ASC
+                    </option>
+
+                    <option value="desc"
+                        {% if order=="desc" %}selected{% endif %}>
+                        DESC
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+        <button class="btn btn-success mb-3">
+            Search
+        </button>
+
+        <a
+            href="{{ url_for('employee.employee_list') }}"
+            class="btn btn-secondary mb-3">
+            Reset
+        </a>
+
+    </form>
+
+
+    
+
+    <table class="table table-bordered table-hover">
+
+        <thead class="table-dark">
+
+            <tr>
+
+                <th>Name</th>
+                <th>Department</th>
+                <th>Salary</th>
+                <th>Email</th>
+                <th>Action</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% if employees.items %}
+
+                {% for emp in employees.items %}
+
+                <tr>
+
+                    <td>{{ emp.name }}</td>
+
+                    <td>{{ emp.department }}</td>
+
+                    <td>{{ emp.salary }}</td>
+
+                    <td>{{ emp.email }}</td>
+
+                    <td>
+
+                        <a
+                            href="/employee/employeeDetail/{{emp.id}}"
+                            class="btn btn-success btn-sm">
+
+                            Detail
+
+                        </a>
+
+                        <a
+                            href="/employee/employeeUpdate/{{emp.id}}"
+                            class="btn btn-warning btn-sm">
+
+                            Edit
+
+                        </a>
+
+                        <a
+                            href="/employee/employeeDelete/{{emp.id}}"
+                            class="btn btn-danger btn-sm">
+
+                            Delete
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            {% else %}
+
+                <tr>
+
+                    <td colspan="5" class="text-center">
+
+                        No Employee Found
+
+                    </td>
+
+                </tr>
+
+            {% endif %}
+
+        </tbody>
+
+    </table>
+
+    <div class="d-flex justify-content-between">
+
+        <div>
+
+            <strong>
+
+                Page {{ employees.page }} of {{ employees.pages }}
+
+            </strong>
+
+            <br>
+
+            Total Employees : {{ employees.total }}
+
+        </div>
+
+        <nav>
+
+            <ul class="pagination">
+
+                {% if employees.has_prev %}
+
+                <li class="page-item">
+
+                    <a class="page-link"
+
+                       href="{{ url_for('employee.employee_list',
+                            page=employees.prev_num,
+                            search=search,
+                            department=department,
+                            min_salary=min_salary,
+                            max_salary=max_salary,
+                            sort_by=sort_by,
+                            order=order) }}">
+
+                        Previous
+
+                    </a>
+
+                </li>
+
+                {% endif %}
+
+
+                {% for p in employees.iter_pages() %}
+
+                    {% if p %}
+
+                        {% if p == employees.page %}
+
+                            <li class="page-item active">
+
+                                <span class="page-link">
+
+                                    {{ p }}
+
+                                </span>
+
+                            </li>
+
+                        {% else %}
+
+                            <li class="page-item">
+
+                                <a class="page-link"
+
+                                href="{{ url_for('employee.employee_list',
+                                        page=p,
+                                        search=search,
+                                        department=department,
+                                        min_salary=min_salary,
+                                        max_salary=max_salary,
+                                        sort_by=sort_by,
+                                        order=order) }}">
+
+                                    {{ p }}
+
+                                </a>
+
+                            </li>
+
+                        {% endif %}
+
+                    {% endif %}
+
+                {% endfor %}
+
+
+                {% if employees.has_next %}
+
+                <li class="page-item">
+
+                    <a class="page-link"
+
+                       href="{{ url_for('employee.employee_list',
+                            page=employees.next_num,
+                            search=search,
+                            department=department,
+                            min_salary=min_salary,
+                            max_salary=max_salary,
+                            sort_by=sort_by,
+                            order=order) }}">
+
+                        Next
+
+                    </a>
+
+                </li>
+
+                {% endif %}
+
+            </ul>
+
+        </nav>
+
+    </div>
+
+</div>
 
 {% endblock %}

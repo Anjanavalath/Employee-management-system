@@ -52,12 +52,76 @@ def register_employee():
     return render_template("add_employee.html")
 
 @employee_bp.route("/employee/list")
+@employee_bp.route("/employee/list")
 def employee_list():
 
-    employees = Employee.query.all()
+    search = request.args.get("search", "")
+    department = request.args.get("department", "")
+    min_salary = request.args.get("min_salary")
+    max_salary = request.args.get("max_salary")
 
-    return render_template("employee.html", employees = employees)
+    sort_by = request.args.get("sort_by", "id")
+    order = request.args.get("order", "asc")
 
+    page = request.args.get("page", 1, type=int)
+
+
+    per_page = 5
+
+   
+    query = Employee.query
+
+    
+    if search:
+        query = query.filter(
+            Employee.name.ilike(f"%{search}%") |
+            Employee.email.ilike(f"%{search}%") |
+            Employee.department.ilike(f"%{search}%")
+        )
+
+    if department:
+        query = query.filter(Employee.department == department)
+
+  
+    if min_salary:
+        query = query.filter(Employee.salary >= int(min_salary))
+
+    if max_salary:
+        query = query.filter(Employee.salary <= int(max_salary))
+
+  
+    sort_columns = {
+        "id": Employee.id,
+        "name": Employee.name,
+        "email": Employee.email,
+        "department": Employee.department,
+        "salary": Employee.salary
+    }
+
+    column = sort_columns.get(sort_by, Employee.id)
+
+    if order == "desc":
+        query = query.order_by(column.desc())
+    else:
+        query = query.order_by(column.asc())
+
+    
+    employees = query.paginate(
+        page=page,
+        per_page=per_page,
+        error_out=False
+    )
+
+    return render_template(
+        "employee.html",
+        employees=employees,
+        search=search,
+        department=department,
+        min_salary=min_salary,
+        max_salary=max_salary,
+        sort_by=sort_by,
+        order=order
+    )
 
 from app.models import db
 
@@ -122,9 +186,3 @@ def employeeDelete(id):
 
     return redirect(url_for("employee.employee_list"))
 
-#advance crud operation
-
-#pagination
-#sorting
-#filtering
-#searching

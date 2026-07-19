@@ -5,7 +5,7 @@ class Config:
 
     SECRECT_KEY = "sha256"
 
-    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:1234@localhost:3306/employee_db"
+    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:1q2w3e4r@localhost:3306/employee_db"
     SQLALCHEMY_TRACK_MODIFICATION = False
 
     APP_NAME = "Employee Management System"
