@@ -28,7 +28,7 @@ employee_bp = Blueprint("employee", __name__)
 def searchByNameId(id, name):
     return f"ID : {id} Name : {name}"
 
-# query parameter : filtering/ sorting  ?
+
 
 @employee_bp.route("/employee")
 def displaySpecific():
@@ -42,9 +42,6 @@ def gotodept():
     return redirect(url_for("department.departmentHome"))
 
 
-# request 
-
-# get and post
 
 @employee_bp.route("/employee/register")
 def register_employee():
@@ -138,16 +135,16 @@ def employeeAdd():
             department = request.form["department"]
         )
 
-        #database query
+        
         db.session.add(employee)
-        #run the query
+        
         db.session.commit()
 
         return redirect(url_for("employee.employee_list"))
     
     return render_template("add_employee.html")
 
-#get specific employee
+
 @employee_bp.route("/employee/employeeDetail/<int:id>", methods=["GET"])
 def employeeDetail(id):
 

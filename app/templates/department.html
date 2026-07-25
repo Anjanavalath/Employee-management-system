@@ -1,5 +1,302 @@
+
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Department Page</h1>
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between mb-3">
+
+        <h2>Department Management</h2>
+
+        <a href="{{ url_for('department.departmentAdd') }}" class="btn btn-primary">
+            Add Department
+        </a>
+
+    </div>
+
+    <form method="GET" action="{{ url_for('department.departmentList') }}">
+
+        <div class="row">
+
+            <!-- Filter by Location -->
+            <div class="col-md-4 mb-3">
+
+                <select class="form-select" name="location">
+
+                    <option value="">All Locations</option>
+
+                    <option value="Kochi"
+                        {% if location=="Kochi" %}selected{% endif %}>
+                        Kochi
+                    </option>
+
+                    <option value="Bangalore"
+                        {% if location=="Bangalore" %}selected{% endif %}>
+                        Bangalore
+                    </option>
+
+                    <option value="Delhi"
+                        {% if location=="Delhi" %}selected{% endif %}>
+                        Delhi
+                    </option>
+
+                    <option value="Mumbai"
+                        {% if location=="Mumbai" %}selected{% endif %}>
+                        Mumbai
+                    </option>
+
+                </select>
+
+            </div>
+
+            <!-- Sort By -->
+            <div class="col-md-4 mb-3">
+
+                <select class="form-select" name="sort_by">
+
+                    <option value="id"
+                        {% if sort_by=="id" %}selected{% endif %}>
+                        ID
+                    </option>
+
+                    <option value="department_name"
+                        {% if sort_by=="department_name" %}selected{% endif %}>
+                        Department Name
+                    </option>
+
+                    <option value="location"
+                        {% if sort_by=="location" %}selected{% endif %}>
+                        Location
+                    </option>
+
+                </select>
+
+            </div>
+
+            <!-- Order -->
+            <div class="col-md-2 mb-3">
+
+                <select class="form-select" name="order">
+
+                    <option value="asc"
+                        {% if order=="asc" %}selected{% endif %}>
+                        ASC
+                    </option>
+
+                    <option value="desc"
+                        {% if order=="desc" %}selected{% endif %}>
+                        DESC
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="col-md-2 mb-3">
+
+                <button class="btn btn-success">
+                    Search
+                </button>
+
+                <a href="{{ url_for('department.departmentList') }}"
+                   class="btn btn-secondary">
+
+                    Reset
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </form>
+
+    <table class="table table-bordered table-hover">
+
+        <thead class="table-dark">
+
+            <tr>
+
+                <th>ID</th>
+                <th>Department</th>
+                <th>Location</th>
+                <th>Head of Department</th>
+                <th>Action</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% if departments.items %}
+
+                {% for dept in departments.items %}
+
+                <tr>
+
+                    <td>{{ dept.id }}</td>
+
+                    <td>{{ dept.department_name }}</td>
+
+                    <td>{{ dept.location }}</td>
+
+                    <td>{{ dept.head_of_department }}</td>
+
+                    <td>
+
+                        <a href="{{ url_for('department.departmentDetail', id=dept.id) }}"
+                           class="btn btn-success btn-sm">
+
+                            Detail
+
+                        </a>
+
+                        <a href="{{ url_for('department.departmentUpdate', id=dept.id) }}"
+                           class="btn btn-warning btn-sm">
+
+                            Edit
+
+                        </a>
+
+                        <a href="{{ url_for('department.departmentDelete', id=dept.id) }}"
+                           class="btn btn-danger btn-sm">
+
+                            Delete
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            {% else %}
+
+                <tr>
+
+                    <td colspan="5" class="text-center">
+
+                        No Department Found
+
+                    </td>
+
+                </tr>
+
+            {% endif %}
+
+        </tbody>
+
+    </table>
+
+    <div class="d-flex justify-content-between">
+
+        <div>
+
+            <strong>
+
+                Page {{ departments.page }} of {{ departments.pages }}
+
+            </strong>
+
+            <br>
+
+            Total Departments : {{ departments.total }}
+
+        </div>
+
+        <nav>
+
+            <ul class="pagination">
+
+                {% if departments.has_prev %}
+
+                <li class="page-item">
+
+                    <a class="page-link"
+
+                       href="{{ url_for('department.departmentList',
+                            page=departments.prev_num,
+                            location=location,
+                            sort_by=sort_by,
+                            order=order) }}">
+
+                        Previous
+
+                    </a>
+
+                </li>
+
+                {% endif %}
+
+                {% for p in departments.iter_pages() %}
+
+                    {% if p %}
+
+                        {% if p == departments.page %}
+
+                        <li class="page-item active">
+
+                            <span class="page-link">
+
+                                {{ p }}
+
+                            </span>
+
+                        </li>
+
+                        {% else %}
+
+                        <li class="page-item">
+
+                            <a class="page-link"
+
+                               href="{{ url_for('department.departmentList',
+                                    page=p,
+                                    location=location,
+                                    sort_by=sort_by,
+                                    order=order) }}">
+
+                                {{ p }}
+
+                            </a>
+
+                        </li>
+
+                        {% endif %}
+
+                    {% endif %}
+
+                {% endfor %}
+
+                {% if departments.has_next %}
+
+                <li class="page-item">
+
+                    <a class="page-link"
+
+                       href="{{ url_for('department.departmentList',
+                            page=departments.next_num,
+                            location=location,
+                            sort_by=sort_by,
+                            order=order) }}">
+
+                        Next
+
+                    </a>
+
+                </li>
+
+                {% endif %}
+
+            </ul>
+
+        </nav>
+
+    </div>
+
+</div>
+
 {% endblock %}

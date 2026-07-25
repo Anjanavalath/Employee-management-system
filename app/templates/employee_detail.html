@@ -1,74 +1,132 @@
 {% extends "base.html" %}
 
 {% block content %}
+
 <div class="row justify-content-center">
-  <div class="col-md-8 col-lg-6">
-    
-    <!-- Profile Card -->
-    <div class="card shadow-sm border-0">
-      
-      <!-- Top Accent Header (Matches our dark/green theme) -->
-      <div class="card-header bg-dark text-white p-4 d-flex align-items-center justify-content-between">
-        <div class="d-flex align-items-center">
-          <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center fs-3 fw-bold me-3" style="width: 60px; height: 60px;">
-            {{ employee.name[0] | upper }}
-          </div>
-          <div>
-            <h4 class="mb-0 fw-semibold">{{ employee.name }}</h4>
-            <span class="badge bg-secondary">ID: #{{ employee.id }}</span>
-          </div>
+
+    <div class="col-md-8 col-lg-6">
+
+        <div class="card shadow-sm border-0">
+
+            
+            <div class="card-header bg-dark text-white p-4 d-flex align-items-center justify-content-between">
+
+                <div class="d-flex align-items-center">
+
+                    <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center fs-3 fw-bold me-3"
+                         style="width: 60px; height: 60px;">
+
+                        {{ employee.name[0] | upper }}
+
+                    </div>
+
+                    <div>
+
+                        <h4 class="mb-0 fw-semibold">
+                            {{ employee.name }}
+                        </h4>
+
+                        <span class="badge bg-secondary">
+                            ID: #{{ employee.id }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <span class="badge bg-success px-3 py-2">
+                    {{ employee.department }}
+                </span>
+
+            </div>
+
+           
+            <div class="card-body p-4">
+
+                <div class="row g-3">
+
+                    
+                    <div class="col-12 border-bottom pb-3">
+
+                        <small class="text-muted fw-bold">
+                            Email Address
+                        </small>
+
+                        <div>
+
+                            <i class="bi bi-envelope me-2"></i>
+
+                            {{ employee.email }}
+
+                        </div>
+
+                    </div>
+
+                    
+                    <div class="col-md-6 border-bottom pb-3">
+
+                        <small class="text-muted fw-bold">
+                            Department
+                        </small>
+
+                        <div>
+
+                            <i class="bi bi-building me-2"></i>
+
+                            {{ employee.department }}
+
+                        </div>
+
+                    </div>
+
+                    <!-- Salary -->
+                    <div class="col-md-6 border-bottom pb-3">
+
+                        <small class="text-muted fw-bold">
+                            Salary
+                        </small>
+
+                        <div>
+
+                            <i class="bi bi-currency-dollar text-success me-2"></i>
+
+                            ${{ "{:,.2f}".format(employee.salary) }}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            
+            <div class="card-footer bg-light d-flex justify-content-between">
+
+                <a href="{{ url_for('employee.employee_list') }}"
+                   class="btn btn-secondary">
+
+                    <i class="bi bi-arrow-left"></i>
+
+                    Back
+
+                </a>
+
+                <a href="{{ url_for('employee.employeeUpdate', id=employee.id) }}"
+                   class="btn btn-primary">
+
+                    <i class="bi bi-pencil-square"></i>
+
+                    Edit Employee
+
+                </a>
+
+            </div>
+
         </div>
-        <span class="badge bg-success px-3 py-2 fs-7 rounded-pill">{{ employee.department }}</span>
-      </div>
 
-      <!-- Main Profile Information -->
-      <div class="card-body p-4">
-        <div class="row g-3">
-          
-          <!-- Email Field -->
-          <div class="col-12 border-bottom pb-2">
-            <span class="text-muted d-block small uppercase fw-medium mb-1">Email Address</span>
-            <div class="d-flex align-items-center text-dark">
-              <i class="bi bi-envelope text-secondary me-2"></i>
-              <span>{{ employee.email }}</span>
-            </div>
-          </div>
-
-          <!-- Department Field -->
-          <div class="col-sm-6 border-bottom pb-2">
-            <span class="text-muted d-block small uppercase fw-medium mb-1">Department</span>
-            <div class="d-flex align-items-center text-dark">
-              <i class="bi bi-building text-secondary me-2"></i>
-              <span>{{ employee.department }}</span>
-            </div>
-          </div>
-
-          <!-- Salary Field -->
-          <div class="col-sm-6 border-bottom pb-2">
-            <span class="text-muted d-block small uppercase fw-medium mb-1">Compensation</span>
-            <div class="d-flex align-items-center text-dark font-monospace fw-semibold">
-              <i class="bi bi-currency-dollar text-success me-2"></i>
-              <span>${{ "{:,.2f}".format(employee.salary | float) if employee.salary is numeric else employee.salary }}</span>
-            </div>
-          </div>
-          
-        </div>
-      </div>
-
-      <!-- Action Footer -->
-      <div class="card-footer bg-light p-3 d-flex justify-content-between align-items-center">
-        <a href="/employee/list" class="btn btn-outline-secondary px-3">
-          <i class="bi bi-arrow-left me-1"></i> Go Back
-        </a>
-        
-        <!-- Added a handy Edit link placeholder since users typically look to update details from a profile view -->
-        <a href="/employee/edit/{{ employee.id }}" class="btn btn-primary px-3">
-          <i class="bi bi-pencil-square me-1"></i> Edit Profile
-        </a>
-      </div>
-      
     </div>
-    
-  </div>
+
 </div>
+
 {% endblock %}
